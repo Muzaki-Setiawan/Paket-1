@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paket 1 TKJ - Ubuntu Server (SSH, DNS, Apache, Zabbix)</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    background: linear-gradient(135deg, #020617, #020617);
+    color: #e5e7eb;
+    line-height: 1.7;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 40px 20px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.4rem;
+    color: #38bdf8;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    text-align: center;
+    opacity: 0.8;
+    margin-bottom: 40px;
+}
+
+h2 {
+    margin-top: 70px;
+    color: #f97316;
+    border-left: 6px solid #f97316;
+    padding-left: 14px;
+}
+
+h3 {
+    margin-top: 35px;
+    color: #a78bfa;
+}
+
+pre {
+    background: #000;
+    color: #22c55e;
+    padding: 16px;
+    border-radius: 10px;
+    overflow-x: auto;
+    margin-top: 15px;
+}
+
+.box {
+    background: rgba(255,255,255,0.05);
+    padding: 22px;
+    border-radius: 14px;
+    margin: 30px 0;
+}
+
+.ok {
+    background: rgba(34,197,94,0.15);
+    border-left: 6px solid #22c55e;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.warn {
+    background: rgba(255,80,80,0.15);
+    border-left: 6px solid #ff5050;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background: rgba(255,255,255,0.15);
+    margin: 70px 0;
+}
+
+footer {
+    text-align: center;
+    margin-top: 80px;
+    opacity: 0.7;
+    font-size: 0.9rem;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>Paket 1 TKJ – Ubuntu Server</h1>
+<p class="subtitle">
+Instalasi & Konfigurasi SSH, DNS Server, Apache2, dan Zabbix<br>
+Ubuntu Server 24.04.3 • VirtualBox • IP 192.168.30.10
+</p>
+
+<div class="box">
+<h3>🧩 Kondisi Awal</h3>
+<ul>
+<li><b>OS</b>: Ubuntu Server 24.04.3</li>
+<li><b>IP Static</b>: 192.168.30.10</li>
+<li><b>Akses</b>: CLI (SSH / VirtualBox)</li>
+<li><b>Client</b>: Windows</li>
+</ul>
+</div>
+
+<hr>
+
+<!-- ================= SSH ================= -->
+
+<h2>1️⃣ Penginstalan SSH</h2>
+
+<h3>Install SSH Server</h3>
+<pre><code>sudo apt update
+sudo apt install ssh -y</code></pre>
+
+<h3>Cek Status SSH</h3>
+<pre><code>sudo systemctl status ssh</code></pre>
+
+<div class="ok">
+Jika status <b>active (running)</b>, SSH sudah berjalan.
+</div>
+
+<h3>Aktifkan SSH Saat Boot</h3>
+<pre><code>sudo systemctl enable ssh</code></pre>
+
+<h3>Akses dari Windows</h3>
+<pre><code>ssh username@192.168.30.10</code></pre>
+
+<hr>
+
+<!-- ================= DNS ================= -->
+
+<h2>2️⃣ DNS Server (BIND9)</h2>
+
+<div class="box">
+<b>Domain</b>: lab-smk.xyz<br>
+<b>IP Server</b>: 192.168.30.10
+</div>
+
+<h3>Install BIND9</h3>
+<pre><code>sudo apt install bind9 -y</code></pre>
+
+<h3>Konfigurasi Zone</h3>
+<pre><code>sudo nano /etc/bind/named.conf.local</code></pre>
+
+<pre><code>zone "lab-smk.xyz" {
+    type master;
+    file "/etc/bind/db.lab-smk";
+};</code></pre>
+
+<h3>File Zone DNS</h3>
+<pre><code>sudo cp /etc/bind/db.local /etc/bind/db.lab-smk
+sudo nano /etc/bind/db.lab-smk</code></pre>
+
+<pre><code>$TTL 300
+@   IN  SOA lab-smk.xyz. root.lab-smk.xyz. (
+    2026020301
+    3600
+    900
+    604800
+    300 )
+
+@       IN  NS  ns.lab-smk.xyz.
+@       IN  A   192.168.30.10
+ns      IN  A   192.168.30.10
+www     IN  A   192.168.30.10
+monitor IN  A   192.168.30.10</code></pre>
+
+<h3>Restart DNS</h3>
+<pre><code>sudo systemctl restart bind9</code></pre>
+
+<h3>Testing dari Windows</h3>
+<pre><code>ping lab-smk.xyz
+ping www.lab-smk.xyz
+ping monitor.lab-smk.xyz</code></pre>
+
+<hr>
+
+<!-- ================= APACHE ================= -->
+
+<h2>3️⃣ Web Server Apache2</h2>
+
+<h3>Install Apache2</h3>
+<pre><code>sudo apt install apache2 -y</code></pre>
+
+<h3>Edit Website</h3>
+<pre><code>sudo nano /var/www/html/index.html</code></pre>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;LAB SMK&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Web Server LAB-SMK&lt;/h1&gt;
+&lt;p&gt;Apache2 berjalan dengan baik&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+<h3>Testing di Browser Windows</h3>
+<pre><code>http://lab-smk.xyz
+http://www.lab-smk.xyz</code></pre>
+
+<hr>
+
+<!-- ================= ZABBIX ================= -->
+
+<h2>4️⃣ Zabbix Server (FULL STACK)</h2>
+
+<h3>Update Sistem</h3>
+<pre><code>sudo apt update && sudo apt upgrade -y</code></pre>
+
+<h3>Install MariaDB</h3>
+<pre><code>sudo apt install mariadb-server -y</code></pre>
+
+<h3>Secure MariaDB</h3>
+<pre><code>sudo mysql_secure_installation</code></pre>
+
+<ul>
+<li>Switch to unix_socket authentication → Y</li>
+<li>Set root password → N</li>
+<li>Remove anonymous users → Y</li>
+<li>Disallow root login remotely → Y</li>
+<li>Remove test database → Y</li>
+<li>Reload privilege tables → Y</li>
+</ul>
+
+<h3>Buat Database Zabbix</h3>
+<pre><code>sudo mysql</code></pre>
+
+<pre><code>CREATE DATABASE zabbix CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
+CREATE USER 'zabbix'@'localhost' IDENTIFIED BY 'ZabbixPass123!';
+GRANT ALL PRIVILEGES ON zabbix.* TO 'zabbix'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;</code></pre>
+
+<h3>Install Repository Zabbix</h3>
+<pre><code>wget https://repo.zabbix.com/zabbix/7.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_latest_7.0+ubuntu24.04_all.deb
+sudo dpkg -i zabbix-release_latest_7.0+ubuntu24.04_all.deb
+sudo apt update</code></pre>
+
+<h3>Install Zabbix Server, Web, Agent</h3>
+<pre><code>sudo apt install zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-agent -y</code></pre>
+
+<h3>Import Database</h3>
+<pre><code>zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz | mysql -u zabbix -p zabbix</code></pre>
+
+<h3>Konfigurasi Zabbix</h3>
+<pre><code>sudo nano /etc/zabbix/zabbix_server.conf</code></pre>
+
+<pre><code>DBName=zabbix
+DBUser=zabbix
+DBPassword=ZabbixPass123!</code></pre>
+
+<h3>Restart Service</h3>
+<pre><code>sudo systemctl restart zabbix-server zabbix-agent apache2
+sudo systemctl enable zabbix-server zabbix-agent apache2</code></pre>
+
+<h3>Akses Web Zabbix</h3>
+<pre><code>http://192.168.30.10/zabbix</code></pre>
+
+<h3>Login Default</h3>
+<pre><code>Username: Admin
+Password: zabbix</code></pre>
+
+<footer>
+Paket 1 TKJ • Ubuntu Server • SSH • DNS • Apache • Zabbix
+</footer>
+
+</div>
+</body>
+</html>
