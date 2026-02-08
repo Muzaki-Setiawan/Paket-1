@@ -1,163 +1,152 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Paket 1 TKJ - Ubuntu Server (SSH, DNS, Apache, Zabbix)</title>
-<link rel="icon" type="image/png" href="favicon.png">
-<style>
-body {
+  <meta charset="UTF-8">
+  <title>Tutorial Ubuntu Server SMK - SSH, DNS, Apache, Zabbix</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="favicon.png">
+  <link rel="shortcut icon" href="favicon.png">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg, #020617, #020617, #0f172a);
+    color: #e5e7eb;
     margin: 0;
-    font-family: "Segoe UI", Tahoma, sans-serif;
+    padding: 0;
+    line-height: 1.8;
+  }
+
+  .container {
+    max-width: 920px;
+    margin: auto;
+    padding: 40px 30px;
+  }
+
+  /* Judul utama */
+  h1 {
+    font-size: 2.6em;
+    background: linear-gradient(90deg, #fb923c, #f97316, #facc15);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 15px;
+  }
+
+  /* Judul section */
+  h2 {
+    margin-top: 60px;
+    font-size: 2em;
+    background: linear-gradient(90deg, #f97316, #fb923c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    border-bottom: 2px solid #1e293b;
+    padding-bottom: 10px;
+  }
+
+  /* Subjudul */
+  h3 {
+    margin-top: 30px;
+    font-size: 1.35em;
+    background: linear-gradient(90deg, #facc15, #fb923c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  p {
+    color: #cbd5f5;
+    font-size: 16px;
+  }
+
+  /* Code block */
+  code, pre {
     background: linear-gradient(135deg, #020617, #020617);
     color: #e5e7eb;
-    line-height: 1.7;
-}
-
-.container {
-    max-width: 1100px;
-    margin: auto;
-    padding: 40px 20px;
-}
-
-h1 {
-    text-align: center;
-    font-size: 2.4rem;
-    color: #38bdf8;
-    margin-bottom: 10px;
-}
-
-.subtitle {
-    text-align: center;
-    opacity: 0.8;
-    margin-bottom: 40px;
-}
-
-h2 {
-    margin-top: 70px;
-    color: #f97316;
-    border-left: 6px solid #f97316;
-    padding-left: 14px;
-}
-
-h3 {
-    margin-top: 35px;
-    color: #a78bfa;
-}
-
-pre {
-    background: #000;
-    color: #22c55e;
-    padding: 16px;
+    padding: 15px;
     border-radius: 10px;
+    display: block;
     overflow-x: auto;
-    margin-top: 15px;
-}
+    border: 1px solid #1e293b;
+    margin-top: 12px;
+    box-shadow: inset 0 0 0 1px rgba(249,115,22,0.15);
+  }
 
-.box {
-    background: rgba(255,255,255,0.05);
-    padding: 22px;
-    border-radius: 14px;
-    margin: 30px 0;
-}
-
-.ok {
-    background: rgba(34,197,94,0.15);
-    border-left: 6px solid #22c55e;
-    padding: 15px;
+  /* Note box */
+  .note {
+    background: linear-gradient(135deg, #020617, #0f172a);
+    border-left: 5px solid #f97316;
+    padding: 18px;
+    margin: 25px 0;
     border-radius: 10px;
-    margin: 20px 0;
-}
+  }
 
-.warn {
-    background: rgba(255,80,80,0.15);
-    border-left: 6px solid #ff5050;
-    padding: 15px;
+  /* Warning box */
+  .warn {
+    background: linear-gradient(135deg, #020617, #0f172a);
+    border-left: 5px solid #facc15;
+    padding: 18px;
+    margin: 25px 0;
     border-radius: 10px;
-    margin: 20px 0;
-}
+  }
 
-hr {
-    border: none;
-    height: 1px;
-    background: rgba(255,255,255,0.15);
-    margin: 70px 0;
-}
-
-footer {
+  footer {
     text-align: center;
-    margin-top: 80px;
-    opacity: 0.7;
-    font-size: 0.9rem;
-}
-
-#chatango-box {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 320px;
-  height: 420px;
-  background: #0f172a;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-  z-index: 9999;
-}
+    margin-top: 90px;
+    color: #94a3b8;
+    font-size: 14px;
+  }
 </style>
 </head>
 
 <body>
 <div class="container">
 
-<h1>Paket 1 TKJ – Ubuntu Server</h1>
-<p class="subtitle">
-Instalasi & Konfigurasi SSH, DNS Server, Apache2, dan Zabbix<br>
-Ubuntu Server 24.04.3 • VirtualBox • IP 192.168.30.10
-</p>
+<h1>Tutorial Ubuntu Server Paket 1</h1>
 
-<div class="box">
-<h3>🧩 Kondisi Awal</h3>
-<ul>
-<li><b>OS</b>: Ubuntu Server 24.04.3</li>
-<li><b>IP Static</b>: 192.168.30.10</li>
-<li><b>Akses</b>: CLI (SSH / VirtualBox)</li>
-<li><b>Client</b>: Windows</li>
-</ul>
+<div class="note">
+<b>Spesifikasi Server:</b><br>
+IP Server: <b>192.168.30.10</b><br>
+OS: Ubuntu Server 24.04<br>
+Akses: VirtualBox / SSH
 </div>
 
-<hr>
+<!-- ====================== BAGIAN 1 ====================== -->
+<h2>1. Penginstalan SSH</h2>
 
-<!-- ================= SSH ================= -->
+<p>
+SSH digunakan agar kita bisa mengontrol server dari Windows tanpa harus membuka VirtualBox.
+</p>
 
-<h2>1️⃣ Penginstalan SSH</h2>
-
-<h3>Install SSH Server</h3>
+<h3>Install SSH</h3>
 <pre><code>sudo apt update
 sudo apt install ssh -y</code></pre>
 
 <h3>Cek Status SSH</h3>
-<pre><code>sudo systemctl status ssh</code></pre>
+<pre><code>systemctl status ssh</code></pre>
 
-<div class="ok">
-Jika status <b>active (running)</b>, SSH sudah berjalan.
-</div>
+<p>Pastikan muncul:</p>
+<pre><code>active (running)</code></pre>
 
-<h3>Aktifkan SSH Saat Boot</h3>
-<pre><code>sudo systemctl enable ssh</code></pre>
-
-<h3>Akses dari Windows</h3>
+<h3>Login dari Windows</h3>
+<p>Buka <b>Command Prompt (CMD)</b> di Windows, lalu ketik:</p>
 <pre><code>ssh username@192.168.30.10</code></pre>
 
-<hr>
-
-<!-- ================= DNS ================= -->
-
-<h2>2️⃣ DNS Server (BIND9)</h2>
-
-<div class="box">
-<b>Domain</b>: lab-smk.xyz<br>
-<b>IP Server</b>: 192.168.30.10
+<div class="note">
+Jika muncul pertanyaan <b>password</b>, masukkan <u>password Ubuntu Server</u>,  
+bukan password database.
 </div>
+
+<!-- ====================== BAGIAN 2 ====================== -->
+<h2>2. DNS Server (BIND9)</h2>
+
+<p>
+DNS berfungsi menerjemahkan nama domain menjadi IP.
+Di sini kita akan menggunakan domain lokal:
+</p>
+
+<pre><code>lab-smk.xyz</code></pre>
 
 <h3>Install BIND9</h3>
 <pre><code>sudo apt install bind9 -y</code></pre>
@@ -165,22 +154,24 @@ Jika status <b>active (running)</b>, SSH sudah berjalan.
 <h3>Konfigurasi Zone</h3>
 <pre><code>sudo nano /etc/bind/named.conf.local</code></pre>
 
+Tambahkan:
 <pre><code>zone "lab-smk.xyz" {
     type master;
     file "/etc/bind/db.lab-smk";
 };</code></pre>
 
-<h3>File Zone DNS</h3>
+<h3>Buat File Zone</h3>
 <pre><code>sudo cp /etc/bind/db.local /etc/bind/db.lab-smk
 sudo nano /etc/bind/db.lab-smk</code></pre>
 
+Isi:
 <pre><code>$TTL 300
 @   IN  SOA lab-smk.xyz. root.lab-smk.xyz. (
-    2026020301
-    3600
-    900
-    604800
-    300 )
+        2026012201
+        3600
+        900
+        604800
+        300 )
 
 @       IN  NS  ns.lab-smk.xyz.
 @       IN  A   192.168.30.10
@@ -191,43 +182,36 @@ monitor IN  A   192.168.30.10</code></pre>
 <h3>Restart DNS</h3>
 <pre><code>sudo systemctl restart bind9</code></pre>
 
-<h3>Testing dari Windows</h3>
+<h3>Pengetesan (Windows)</h3>
+<p>Atur DNS Windows ke <b>192.168.30.10</b>, lalu:</p>
 <pre><code>ping lab-smk.xyz
 ping www.lab-smk.xyz
 ping monitor.lab-smk.xyz</code></pre>
 
-<hr>
+<!-- ====================== BAGIAN 3 ====================== -->
+<h2>3. Web Server Apache2</h2>
 
-<!-- ================= APACHE ================= -->
-
-<h2>3️⃣ Web Server Apache2</h2>
-
-<h3>Install Apache2</h3>
+<h3>Install Apache</h3>
 <pre><code>sudo apt install apache2 -y</code></pre>
 
-<h3>Edit Website</h3>
+<h3>Edit Halaman Web</h3>
 <pre><code>sudo nano /var/www/html/index.html</code></pre>
 
-<pre><code>&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-&lt;title&gt;LAB SMK&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;h1&gt;Web Server LAB-SMK&lt;/h1&gt;
-&lt;p&gt;Apache2 berjalan dengan baik&lt;/p&gt;
-&lt;/body&gt;
-&lt;/html&gt;</code></pre>
+Isi singkat:
+<pre><code>&lt;h1&gt;Web Server Ubuntu SMK&lt;/h1&gt;
+&lt;p&gt;Apache2 berhasil dijalankan&lt;/p&gt;</code></pre>
 
-<h3>Testing di Browser Windows</h3>
-<pre><code>http://lab-smk.xyz
-http://www.lab-smk.xyz</code></pre>
+<h3>Test di Browser</h3>
+<p>Buka di Windows:</p>
+<pre><code>http://lab-smk.xyz</code></pre>
 
-<hr>
+<!-- ====================== BAGIAN 4 ====================== -->
+<h2>4. Zabbix Server (Versi Aman & Pasti Jalan)</h2>
 
-<!-- ================= ZABBIX ================= -->
-
-<h2>4️⃣ Zabbix Server (FULL STACK)</h2>
+<div class="warn">
+Bagian ini memakai <b>cara manual schema database</b> karena pada beberapa sistem
+folder sql bawaan Zabbix <b>tidak tersedia</b>.
+</div>
 
 <h3>Update Sistem</h3>
 <pre><code>sudo apt update && sudo apt upgrade -y</code></pre>
@@ -238,84 +222,76 @@ http://www.lab-smk.xyz</code></pre>
 <h3>Secure MariaDB</h3>
 <pre><code>sudo mysql_secure_installation</code></pre>
 
-<ul>
-<li>Switch to unix_socket authentication → Y</li>
-<li>Set root password → N</li>
-<li>Remove anonymous users → Y</li>
-<li>Disallow root login remotely → Y</li>
-<li>Remove test database → Y</li>
-<li>Reload privilege tables → Y</li>
-</ul>
+Gunakan jawaban:
+<pre><code>Switch to unix_socket authentication → Y
+Set root password → N
+Remove anonymous users → Y
+Disallow root login remotely → Y
+Remove test database → Y
+Reload privilege tables → Y</code></pre>
 
 <h3>Buat Database Zabbix</h3>
 <pre><code>sudo mysql</code></pre>
 
 <pre><code>CREATE DATABASE zabbix CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
-CREATE USER 'zabbix'@'localhost' IDENTIFIED BY 'ZabbixPass123!';
+CREATE USER 'zabbix'@'localhost' IDENTIFIED BY '1';
 GRANT ALL PRIVILEGES ON zabbix.* TO 'zabbix'@'localhost';
 FLUSH PRIVILEGES;
 EXIT;</code></pre>
+
+<div class="note">
+Password database adalah <b>1</b>.  
+Jangan memasukkan password Ubuntu saat diminta password MySQL.
+</div>
 
 <h3>Install Repository Zabbix</h3>
 <pre><code>wget https://repo.zabbix.com/zabbix/7.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_latest_7.0+ubuntu24.04_all.deb
 sudo dpkg -i zabbix-release_latest_7.0+ubuntu24.04_all.deb
 sudo apt update</code></pre>
 
-<h3>Install Zabbix Server, Web, Agent</h3>
+<h3>Install Zabbix</h3>
 <pre><code>sudo apt install zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-agent -y</code></pre>
 
-<h3>Import Database</h3>
-<pre><code>zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz | mysql -u zabbix -p zabbix</code></pre>
+<h3>Download Schema Manual</h3>
+<pre><code>cd ~
+wget https://cdn.zabbix.com/zabbix/sources/stable/7.0/zabbix-7.0.0.tar.gz
+tar -xzf zabbix-7.0.0.tar.gz
+cd zabbix-7.0.0/database/mysql</code></pre>
+
+<h3>Import Database (URUTAN WAJIB)</h3>
+<pre><code>mysql -u zabbix -p zabbix &lt; schema.sql
+mysql -u zabbix -p zabbix &lt; images.sql
+mysql -u zabbix -p zabbix &lt; data.sql</code></pre>
+
+Password:
+<pre><code>1</code></pre>
 
 <h3>Konfigurasi Zabbix</h3>
 <pre><code>sudo nano /etc/zabbix/zabbix_server.conf</code></pre>
 
+Pastikan:
 <pre><code>DBName=zabbix
 DBUser=zabbix
-DBPassword=ZabbixPass123!</code></pre>
+DBPassword=1</code></pre>
 
 <h3>Restart Service</h3>
-<pre><code>sudo systemctl restart zabbix-server zabbix-agent apache2
-sudo systemctl enable zabbix-server zabbix-agent apache2</code></pre>
+<pre><code>sudo systemctl restart zabbix-server apache2 zabbix-agent
+sudo systemctl enable zabbix-server apache2 zabbix-agent</code></pre>
 
-<h3>Akses Web Zabbix</h3>
-<pre><code>http://192.168.30.10/zabbix</code></pre>
+<h3>Akses Web</h3>
+<pre><code>http://monitor.lab-smk.xyz/zabbix</code></pre>
 
-<h3>Login Default</h3>
-<pre><code>Username: Admin
-Password: zabbix</code></pre>
+Login:
+<pre><code>Admin
+zabbix</code></pre>
+
+<h2>🎉 SELESAI</h2>
+<p>Zabbix Server siap digunakan untuk monitoring.</p>
 
 <footer>
-Paket 1 TKJ • Ubuntu Server • SSH • DNS • Apache • Zabbix
+Tutorial Ubuntu Server SMK • Dibuat untuk pembelajaran kelas TKJ
 </footer>
-
-  <script id="cid0020000431126614070"
-    data-cfasync="false"
-    async
-    src="//st.chatango.com/js/gz/emb.js">
-    {
-      "handle":"barudaktkj",
-      "arch":"js",
-      "styles":{
-        "a":"0f172a",
-        "b":100,
-        "c":"ffffff",
-        "d":"38bdf8",
-        "k":"0f172a",
-        "l":"e5e7eb",
-        "m":"0f172a",
-        "n":"ffffff",
-        "p":"10",
-        "q":"38bdf8",
-        "r":100,
-        "fwtickm":1
-      }
-    }
-  </script> 
 
 </div>
 </body>
-
 </html>
-
-
