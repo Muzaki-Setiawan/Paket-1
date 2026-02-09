@@ -285,6 +285,137 @@ Login:
 <pre><code>Admin
 zabbix</code></pre>
 
+<!-- ====================== BAGIAN 5 ====================== -->
+<h2>5️⃣ Firewall MikroTik (Sesuai Soal)</h2>
+
+<p>
+Pada bagian ini kita akan mengatur <b>Firewall Filter Rules</b> di MikroTik
+untuk mengamankan jaringan antar VLAN serta akses ke router.
+</p>
+
+<div class="note">
+Masuk ke MikroTik melalui:<br>
+<b>IP → Firewall → Filter Rules</b>
+</div>
+
+<!-- ====================== A ====================== -->
+<h3>a️⃣ Blok Akses VLAN 20 ke VLAN 10</h3>
+
+<p>
+Aturan ini digunakan untuk <b>melarang VLAN 20</b> mengakses jaringan <b>VLAN 10</b>.
+</p>
+
+<p>
+<b>Catatan penting:</b><br>
+Rule ini harus berada <b>DI ATAS rule allow</b> agar benar-benar bekerja.
+</p>
+
+<pre><code>Chain        : forward
+Src. Address : 192.168.20.0/24
+Dst. Address : 192.168.10.0/24
+Action       : drop
+Comment      : BLOCK VLAN20 to VLAN10</code></pre>
+
+<!-- ====================== B ====================== -->
+<h3>b️⃣ Izinkan VLAN 30 ke VLAN 10</h3>
+
+<p>
+Berbeda dengan VLAN 20, <b>VLAN 30 diizinkan</b> untuk mengakses VLAN 10.
+Biasanya VLAN ini digunakan untuk admin atau monitoring.
+</p>
+
+<pre><code>Chain        : forward
+Src. Address : 192.168.30.0/24
+Dst. Address : 192.168.10.0/24
+Action       : accept
+Comment      : ALLOW VLAN30 to VLAN10</code></pre>
+
+<div class="warn">
+Pastikan rule ini berada <b>DI ATAS rule DROP VLAN20</b>,
+karena MikroTik membaca firewall dari atas ke bawah.
+</div>
+
+<!-- ====================== C ====================== -->
+<h3>c️⃣ Pengamanan Brute-Force Login (SSH & Winbox)</h3>
+
+<p>
+Untuk mencegah serangan brute-force (login berulang-ulang),
+kita gunakan <b>Address List</b>.
+</p>
+
+<h4>Rule 1 — Deteksi Brute-Force</h4>
+
+<pre><code>Chain              : input
+Protocol           : tcp
+Dst Port           : 22,8291
+Connection State   : new
+Action             : add-src-to-address-list
+Address List       : brute-force
+Address List Time  : 1d</code></pre>
+
+<h4>Rule 2 — Blok Brute-Force</h4>
+
+<pre><code>Chain            : input
+Src Address List : brute-force
+Action           : drop
+Comment          : BLOCK BRUTE FORCE</code></pre>
+
+<div class="note">
+Artinya: jika ada IP mencoba login berulang kali,
+IP tersebut akan otomatis diblokir selama <b>1 hari</b>.
+</div>
+
+<!-- ====================== D ====================== -->
+<h3>d️⃣ Logging Aktivitas Penting Router</h3>
+
+<p>
+Rule ini digunakan untuk mencatat aktivitas akses ke router
+agar admin dapat melakukan monitoring.
+</p>
+
+<pre><code>Chain      : input
+Action     : log
+Log Prefix : ROUTER-ACCESS</code></pre>
+
+<div class="warn">
+Jangan menambahkan terlalu banyak rule <b>log</b>
+karena dapat membuat router menjadi berat.
+</div>
+
+<!-- ====================== E ====================== -->
+<h3>e️⃣ Pembatasan Akses Router (SSH & Winbox)</h3>
+
+<p>
+Akses ke router <b>hanya diperbolehkan</b> dari VLAN tertentu,
+yaitu VLAN 10 dan VLAN 30.
+</p>
+
+<h4>Allow VLAN 10</h4>
+<pre><code>Chain        : input
+Src Address : 192.168.10.0/24
+Protocol    : tcp
+Dst Port    : 22,8291
+Action      : accept</code></pre>
+
+<h4>Allow VLAN 30</h4>
+<pre><code>Chain        : input
+Src Address : 192.168.30.0/24
+Protocol    : tcp
+Dst Port    : 22,8291
+Action      : accept</code></pre>
+
+<h4>Drop Akses Selain Itu</h4>
+<pre><code>Chain      : input
+Protocol   : tcp
+Dst Port   : 22,8291
+Action     : drop
+Comment    : DROP OTHER ACCESS</code></pre>
+
+<div class="note">
+Dengan aturan ini, hanya perangkat dari VLAN 10 dan VLAN 30
+yang bisa mengakses router menggunakan SSH dan Winbox.
+</div>
+  
 <h2>🎉 SELESAI</h2>
 <p>Zabbix Server siap digunakan untuk monitoring.</p>
 
@@ -295,4 +426,5 @@ Tutorial Ubuntu Server SMK • Dibuat untuk pembelajaran kelas TKJ
 </div>
 </body>
 </html>
+
 
